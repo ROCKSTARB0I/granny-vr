@@ -1,0 +1,64 @@
+:root{
+  --ink:#d8d4cc; --dim:#8b8680; --blood:#7d1f16;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#000;overflow:hidden;
+  font-family:"Courier New",ui-monospace,monospace;color:var(--ink);
+  -webkit-user-select:none;user-select:none;cursor:default}
+canvas#view{display:block;width:100vw;height:100vh}
+
+#vignette{position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,0) 46%,rgba(0,0,0,.55) 100%)}
+#fade{position:fixed;inset:0;pointer-events:none;background:#000;opacity:0;
+  transition:opacity .5s linear}
+/* During the jumpscare the overlay is redrawn every frame, so the easing has
+   to come off or it lags a third of a second behind the hit. */
+#fade.instant{transition:none}
+
+/* ------------------------------------------------------------------- HUD */
+#hud{position:fixed;inset:0;pointer-events:none}
+#crosshair{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;
+  border-radius:50%;background:rgba(230,228,222,.55);
+  box-shadow:0 0 0 1px rgba(0,0,0,.5)}
+#prompt{position:absolute;left:50%;top:calc(50% + 34px);transform:translateX(-50%);
+  font-size:15px;letter-spacing:.08em;text-shadow:0 2px 6px #000;white-space:nowrap;
+  opacity:0;transition:opacity .12s}
+#prompt.on{opacity:1}
+#roomLabel{position:absolute;left:18px;bottom:16px;font-size:13px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);text-shadow:0 2px 6px #000}
+#dayLabel{position:absolute;left:18px;top:14px;font-size:13px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dim);text-shadow:0 2px 6px #000}
+#hand{position:absolute;right:18px;bottom:16px;font-size:14px;letter-spacing:.1em;
+  text-align:right;text-shadow:0 2px 6px #000}
+#subtitle{position:absolute;left:50%;bottom:74px;transform:translateX(-50%);
+  font-size:14px;letter-spacing:.06em;color:#cfc9c0;text-shadow:0 2px 6px #000;
+  opacity:0;transition:opacity .3s;font-style:italic}
+#subtitle.on{opacity:.92}
+#debug{position:absolute;right:18px;top:14px;font-size:12px;line-height:1.5;
+  color:#7fa06a;text-align:right;text-shadow:0 1px 3px #000;white-space:pre}
+
+#pauseHint{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);
+  font-size:13px;letter-spacing:.1em;color:var(--dim);text-shadow:0 2px 6px #000}
+
+/* ---------------------------------------------------------------- screens */
+#screen{position:fixed;inset:0;display:none}
+#screen.on{display:block}
+
+/* ------------------------------------------------------------- main menu */
+#screen{background:transparent}
+#menuTitle{position:absolute;right:4vw;top:7vh;width:min(50vw,680px);
+  filter:drop-shadow(0 4px 14px rgba(0,0,0,.85));opacity:.94;pointer-events:none}
+#menuNav{position:absolute;left:7vw;top:46%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:2.6rem;align-items:flex-start}
+#menuNav button{background:none;border:0;padding:0;cursor:pointer;
+  font-family:"Times New Roman",Georgia,serif;font-size:clamp(28px,4.4vw,56px);
+  letter-spacing:.22em;text-transform:uppercase;color:#cfcac1;
+  text-shadow:0 3px 10px #000,0 0 26px rgba(0,0,0,.9);
+  transition:color .18s,letter-spacing .25s,text-shadow .18s}
+#menuNav button[hidden]{display:none}
+#menuNav button.disabled{color:#4d4943;cursor:not-allowed}
+#menuNav button.disabled:hover{color:#4d4943;letter-spacing:.22em;text-shadow:0 3px 10px #000}
+#menuNav button:hover,#menuNav button:focus-visible{color:#fff;letter-spacing:.3em;
+  text-shadow:0 3px 10px #000,0 0 22px rgba(150,20,14,.75);outline:none}
+#menuHint{position:absolute;left:0;right:0;bottom:3.5vh;margin:0;text-align:center;
+  font-size:12px;letter-spacing:.14em;color:#6f6a63;text-shadow:0 2px 6px #000}
