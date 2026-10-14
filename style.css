@@ -62,3 +62,23 @@ canvas#view{display:block;width:100vw;height:100vh}
   text-shadow:0 3px 10px #000,0 0 22px rgba(150,20,14,.75);outline:none}
 #menuHint{position:absolute;left:0;right:0;bottom:3.5vh;margin:0;text-align:center;
   font-size:12px;letter-spacing:.14em;color:#6f6a63;text-shadow:0 2px 6px #000}
+
+/* ------------------------------------------------------ vr control sheet */
+#vrSheet{position:absolute;left:7vw;top:50%;transform:translateY(-50%);
+  max-width:min(46vw,620px);color:#cfc9bd;
+  font-family:"Courier New",monospace;text-shadow:0 2px 8px #000}
+#vrSheet[hidden]{display:none}
+#vrSheet h2{margin:0 0 1.1rem;font-family:"Times New Roman",Georgia,serif;
+  font-size:clamp(22px,3vw,34px);letter-spacing:.2em;text-transform:uppercase;
+  font-weight:400;color:#e2dcd0}
+#vrSheet dl{margin:0;display:grid;grid-template-columns:auto 1fr;
+  gap:.45rem 1.4rem;font-size:13px;line-height:1.45}
+#vrSheet dt{color:#e2dcd0;letter-spacing:.1em;white-space:nowrap}
+#vrSheet dd{margin:0;color:#948d82}
+#vrSheet .note{margin:1.1rem 0 0;font-size:12px;line-height:1.5;color:#7d776e;
+  max-width:46ch}
+#vrSheetClose{margin-top:1.6rem;background:none;border:0;padding:0;cursor:pointer;
+  font-family:"Times New Roman",Georgia,serif;font-size:clamp(20px,2.6vw,30px);
+  letter-spacing:.22em;text-transform:uppercase;color:#cfc9c1;
+  text-shadow:0 3px 10px #000;transition:color .18s,letter-spacing .25s}
+#vrSheetClose:hover{color:#fff;letter-spacing:.3em}
