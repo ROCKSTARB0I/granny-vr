@@ -5,8 +5,8 @@
 //   * containers -- drawers, cupboards, safes, the well bucket, the car trunk.
 //     These are the spawn points the wiki's item-location presets refer to, so
 //     each one carries a `slot` id matching the names used in items.js.
-import * as THREE from '../vendor/three.module.js?v=10';
-import { LEVELS, ROOM_BY_ID } from './floorplan.js?v=10';
+import * as THREE from '../vendor/three.module.js?v=12';
+import { LEVELS, ROOM_BY_ID } from './floorplan.js?v=12';
 
 const DEG = Math.PI / 180;
 

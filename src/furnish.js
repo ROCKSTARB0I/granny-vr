@@ -7,7 +7,7 @@
 //
 // Container slot names match the wiki's Item Locations table ("kitchen:cupboard2",
 // "jail:ventilator", "car:trunk") so the five spawn presets transcribe directly.
-import { Props } from './props.js?v=10';
+import { Props } from './props.js?v=12';
 
 export function furnish(world) {
   const p = new Props(world);

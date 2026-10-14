@@ -3,7 +3,7 @@
 // The house has ~45 fixtures. Rather than paying for all of them, a fixed
 // pool of PointLights is re-pointed each frame at the nearest fixtures, which
 // keeps the shader's light count constant and cheap.
-import * as THREE from '../vendor/three.module.js?v=10';
+import * as THREE from '../vendor/three.module.js?v=12';
 
 const POOL = 7;
 

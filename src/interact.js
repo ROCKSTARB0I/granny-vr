@@ -4,7 +4,7 @@
 // a prompt for it, and acts on it when E is pressed. Ladders and trapdoors are
 // the ones that matter right now: without this the house's vertical shortcuts
 // existed as geometry but could not actually be used.
-import * as THREE from '../vendor/three.module.js?v=10';
+import * as THREE from '../vendor/three.module.js?v=12';
 
 const REACH = 2.6;
 const AIM = 0.62;          // how closely you must be looking at it

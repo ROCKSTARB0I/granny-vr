@@ -10,8 +10,8 @@
 // Slot ids are the container names furnish.js registered, which were in turn
 // named after the wiki's own wording ("kitchen:cupboard5", "jail:ventilator"),
 // so the tables below read almost exactly like the source.
-import * as THREE from '../vendor/three.module.js?v=10';
-import { mat } from './textures.js?v=10';
+import * as THREE from '../vendor/three.module.js?v=12';
+import { mat } from './textures.js?v=12';
 
 /* ------------------------------------------------------------ definitions */
 

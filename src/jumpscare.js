@@ -4,7 +4,7 @@
 // player and give it to her. Control is seized, her face is moved to fill the
 // frame, and for ~1.6 seconds the only things that move are her lunge and the
 // shake. Being unable to look away is most of what makes it land.
-import * as THREE from '../vendor/three.module.js?v=10';
+import * as THREE from '../vendor/three.module.js?v=12';
 
 const DURATION = 1.65;
 

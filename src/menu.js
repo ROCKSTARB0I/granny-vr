@@ -7,9 +7,9 @@
 //
 // The GRANNY wordmark is drawn to a canvas and then eroded with noise, the
 // same way the rest of the game's art is made -- no font files, no images.
-import * as THREE from '../vendor/three.module.js?v=10';
-import { mat } from './textures.js?v=10';
-import { buildModel } from './granny.js?v=10';
+import * as THREE from '../vendor/three.module.js?v=12';
+import { mat } from './textures.js?v=12';
+import { buildModel } from './granny.js?v=12';
 
 /* ------------------------------------------------------------- the wordmark */
 
@@ -177,7 +177,8 @@ export class MainMenu {
     const nav = document.createElement('nav');
     nav.id = 'menuNav';
     this.buttons = {};
-    for (const [key, label] of [['play', 'Play'], ['vr', 'Play in VR'], ['quit', 'Quit']]) {
+    for (const [key, label] of [['play', 'Play'], ['vr', 'Play in VR'],
+                                ['controls', 'VR Controls'], ['quit', 'Quit']]) {
       const b = document.createElement('button');
       b.textContent = label;
       b.dataset.key = key;
@@ -186,15 +187,51 @@ export class MainMenu {
     }
     root.appendChild(nav);
 
+    // The VR control sheet. Lives behind its own button so the title screen
+    // stays as sparse as the original.
+    const sheet = document.createElement('div');
+    sheet.id = 'vrSheet';
+    sheet.hidden = true;
+    sheet.innerHTML = `
+      <h2>Quest Controls</h2>
+      <dl>
+        <dt>Left stick</dt><dd>Walk — relative to where you are looking</dd>
+        <dt>Left stick click</dt><dd>Flashlight on / off</dd>
+        <dt>Right stick</dt><dd>Snap turn, 30&deg; a click</dd>
+        <dt>Right trigger</dt><dd>Open a drawer · take what you are pointing at · hide</dd>
+        <dt>Right grip</dt><dd>Drop what you are holding</dd>
+        <dt>A</dt><dd>Throw it instead — louder, and it bursts the melon</dd>
+        <dt>Menu button</dt><dd>Leave VR and return to the desktop view</dd>
+      </dl>
+      <p class="note">Your left wrist shows the day, the room, what you are
+      carrying and the current prompt. You can only carry one thing at a time.</p>
+      <p class="note">Snap turn and the movement vignette are on by default —
+      they are there to keep you comfortable.</p>
+      <button id="vrSheetClose">Back</button>`;
+    root.appendChild(sheet);
+    this.sheet = sheet;
+
     const hint = document.createElement('p');
     hint.id = 'menuHint';
     hint.textContent = 'WASD move · mouse look · E take / open · V drop · T throw · G flashlight · Shift run · C crouch';
     root.appendChild(hint);
 
     this.root = root;
+    this._wireSheet();
   }
 
   onPlay(fn) { this.buttons.play.addEventListener('click', fn); }
+
+  // The control sheet toggles in place; nothing else on the menu moves.
+  _wireSheet() {
+    const show = (on) => {
+      this.sheet.hidden = !on;
+      document.getElementById('menuNav').style.visibility = on ? 'hidden' : '';
+      document.getElementById('menuTitle').style.opacity = on ? '0.25' : '';
+    };
+    this.buttons.controls.addEventListener('click', () => show(true));
+    this.sheet.querySelector('#vrSheetClose').addEventListener('click', () => show(false));
+  }
   onVR(fn) { this.buttons.vr.addEventListener('click', fn); }
 
   // The VR entry only appears when a headset is actually there.
