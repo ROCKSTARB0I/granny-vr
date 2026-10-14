@@ -4,7 +4,7 @@
 // looking at your feet does not swing the beam down with you. That is what
 // makes a body-worn light feel worn rather than held, and it keeps the corners
 // of a room dark while you are looking straight ahead.
-import * as THREE from '../vendor/three.module.js?v=9';
+import * as THREE from '../vendor/three.module.js?v=10';
 
 const CHEST_DROP = 0.42;        // below eye height
 const FIXED_PITCH = -0.10;      // a few degrees down, as a clipped lamp sits

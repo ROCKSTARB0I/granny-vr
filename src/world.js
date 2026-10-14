@@ -4,11 +4,11 @@
 // treads and furniture all register the same way, which makes collision a
 // single sweep and lets the player step up onto anything <= STEP_HEIGHT
 // without special-casing stairs.
-import * as THREE from '../vendor/three.module.js?v=9';
-import { mat, tex, tileScale } from './textures.js?v=9';
+import * as THREE from '../vendor/three.module.js?v=10';
+import { mat, tex, tileScale } from './textures.js?v=10';
 import {
   LEVELS, ROOMS, ROOM_BY_ID, PORTALS, WINDOWS, STAIRS, DROPS, LADDERS, CREAKS, WALL_H,
-} from './floorplan.js?v=9';
+} from './floorplan.js?v=10';
 
 export const STEP_HEIGHT = 0.42;
 const PANEL = 0.09;           // half-thickness of a room's own wall panel

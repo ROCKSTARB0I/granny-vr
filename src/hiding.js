@@ -8,7 +8,7 @@
 // and hauls you out. If she merely wanders past while searching, she might
 // check it. Hiding is a gamble whose odds depend on whether you broke her line
 // of sight first.
-import * as THREE from '../vendor/three.module.js?v=9';
+import * as THREE from '../vendor/three.module.js?v=10';
 
 const LABELS = {
   bed: 'Hide under the bed',

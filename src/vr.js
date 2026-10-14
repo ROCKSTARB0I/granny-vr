@@ -10,7 +10,7 @@
 //   * snap turn by default (smooth turning is the main nausea trigger)
 //   * a tunnel vignette while moving
 //   * the jumpscare never rotates your head; she comes to you instead
-import * as THREE from '../vendor/three.module.js?v=9';
+import * as THREE from '../vendor/three.module.js?v=10';
 
 const SNAP_ANGLE = Math.PI / 6;       // 30 degrees
 const DEADZONE = 0.35;

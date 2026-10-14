@@ -5,9 +5,9 @@
 // beat to resolve into recognition -- standing still in a dark corner two
 // metres away usually works. Hearing is the opposite: any noise anywhere in the
 // house registers, and she walks straight to the exact spot it came from.
-import * as THREE from '../vendor/three.module.js?v=9';
-import { LEVELS, ROOM_BY_ID, WAYPOINTS, GRANNY_SPAWN } from './floorplan.js?v=9';
-import { moveBody } from './collide.js?v=9';
+import * as THREE from '../vendor/three.module.js?v=10';
+import { LEVELS, ROOM_BY_ID, WAYPOINTS, GRANNY_SPAWN } from './floorplan.js?v=10';
+import { moveBody } from './collide.js?v=10';
 
 // The floors she actually lives on. The sewers, the Secret Area and the
 // Special Room are places she visits, not places she should be parked -- left

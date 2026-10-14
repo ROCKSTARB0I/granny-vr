@@ -4,8 +4,8 @@
 // where you can see it. Items hidden in drawers and safes are not visible
 // until you have opened the thing they are in. Dropping makes a noise, and
 // noise is the only sense Granny really has.
-import * as THREE from '../vendor/three.module.js?v=9';
-import { ITEMS, STATIC, PRESETS } from './items.js?v=9';
+import * as THREE from '../vendor/three.module.js?v=10';
+import { ITEMS, STATIC, PRESETS } from './items.js?v=10';
 
 const ROUND_KEY = 'granny.preset';
 

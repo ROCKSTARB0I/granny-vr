@@ -7,9 +7,9 @@
 //
 // The GRANNY wordmark is drawn to a canvas and then eroded with noise, the
 // same way the rest of the game's art is made -- no font files, no images.
-import * as THREE from '../vendor/three.module.js?v=9';
-import { mat } from './textures.js?v=9';
-import { buildModel } from './granny.js?v=9';
+import * as THREE from '../vendor/three.module.js?v=10';
+import { mat } from './textures.js?v=10';
+import { buildModel } from './granny.js?v=10';
 
 /* ------------------------------------------------------------- the wordmark */
 

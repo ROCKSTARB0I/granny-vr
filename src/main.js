@@ -1,20 +1,20 @@
 // main.js -- bootstrap and the frame loop.
-import * as THREE from '../vendor/three.module.js?v=9';
-import { World } from './world.js?v=9';
-import { Player } from './player.js?v=9';
-import { LightRig } from './lighting.js?v=9';
-import { furnish } from './furnish.js?v=9';
-import { auditDoorways, auditStairs, auditStairHeadroom } from './props.js?v=9';
-import { Granny } from './granny.js?v=9';
-import { Audio } from './audio.js?v=9';
-import { JumpScare } from './jumpscare.js?v=9';
-import { Interactor } from './interact.js?v=9';
-import { MainMenu } from './menu.js?v=9';
-import { Loot } from './loot.js?v=9';
-import { VR } from './vr.js?v=9';
-import { Flashlight } from './flashlight.js?v=9';
-import { Hiding } from './hiding.js?v=9';
-import { PLAYER_SPAWN, LEVELS, ROOM_BY_ID } from './floorplan.js?v=9';
+import * as THREE from '../vendor/three.module.js?v=10';
+import { World } from './world.js?v=10';
+import { Player } from './player.js?v=10';
+import { LightRig } from './lighting.js?v=10';
+import { furnish } from './furnish.js?v=10';
+import { auditDoorways, auditStairs, auditStairHeadroom } from './props.js?v=10';
+import { Granny } from './granny.js?v=10';
+import { Audio } from './audio.js?v=10';
+import { JumpScare } from './jumpscare.js?v=10';
+import { Interactor } from './interact.js?v=10';
+import { MainMenu } from './menu.js?v=10';
+import { Loot } from './loot.js?v=10';
+import { VR } from './vr.js?v=10';
+import { Flashlight } from './flashlight.js?v=10';
+import { Hiding } from './hiding.js?v=10';
+import { PLAYER_SPAWN, LEVELS, ROOM_BY_ID } from './floorplan.js?v=10';
 
 const canvas = document.getElementById('view');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
@@ -184,7 +184,6 @@ const audio = new Audio();
 // Browsers will not start an audio context until the user has interacted.
 function unlockAudio() {
   audio.unlock();
-  audio.startAmbient();
   audio.startTheme();
   removeEventListener('pointerdown', unlockAudio);
   removeEventListener('keydown', unlockAudio);
@@ -324,7 +323,6 @@ vr.onEnter = () => {
   pauseHint.hidden = true;
   state = 'playing';
   audio.unlock();
-  audio.startAmbient();
   audio.startTheme();
 };
 vr.onExit = () => {
@@ -367,7 +365,6 @@ pauseHint.hidden = true;
 
 menu.onPlay(() => {
   audio.unlock();
-  audio.startAmbient();
   audio.startTheme();
   menu.hide();
   hud.hidden = false;
