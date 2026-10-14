@@ -8,7 +8,7 @@
 //   * plaster    -- cold grey with warm brown water stains and hairline cracks
 //   * floor      -- very desaturated planks, heavy lengthwise grain, dark seams
 //   * wood trim  -- mid brown, strong dark grain, slightly warmer than floors
-import * as THREE from '../vendor/three.module.js?v=1';
+import * as THREE from '../vendor/three.module.js?v=9';
 
 /* ------------------------------------------------------------------ noise */
 

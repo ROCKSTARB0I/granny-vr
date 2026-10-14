@@ -4,7 +4,7 @@
 // a prompt for it, and acts on it when E is pressed. Ladders and trapdoors are
 // the ones that matter right now: without this the house's vertical shortcuts
 // existed as geometry but could not actually be used.
-import * as THREE from '../vendor/three.module.js?v=1';
+import * as THREE from '../vendor/three.module.js?v=9';
 
 const REACH = 2.6;
 const AIM = 0.62;          // how closely you must be looking at it
@@ -27,6 +27,8 @@ export class Interactor {
   pick(aim) {
     const p = this.player;
     if (p.freecam) return null;
+    // Hidden: the only interaction left is getting out again.
+    if (this.hiding?.hidden) return this.hiding.current;
     const eye = aim ? { x: aim.origin.x, y: aim.origin.y, z: aim.origin.z }
                     : { x: p.pos.x, y: p.pos.y + p.eye, z: p.pos.z };
     if (aim) this._fwd.set(aim.dir.x, 0, aim.dir.z).normalize();
@@ -49,7 +51,8 @@ export class Interactor {
       if (aim < needed) continue;
       // Ladders and hatches outrank scenery, so standing at a ladder offers
       // the climb rather than a shelf on the wall behind it.
-      const bonus = (it.kind === 'ladder' || it.kind === 'trapdoor') ? 1.2
+      const bonus = (it.kind === 'hidingSpot') ? 1.0
+                  : (it.kind === 'ladder' || it.kind === 'trapdoor') ? 1.2
                   : it.kind === 'item' ? 1.6          // a pickup always wins
                   : 0;
       const score = aim * 2 - dist * 0.4 + bonus;
@@ -74,6 +77,7 @@ export class Interactor {
 
   label(it) {
     if (!it) return '';
+    if (it.kind === 'hidingSpot') return this.hiding ? this.hiding.label(it) : it.label;
     if (it.kind === 'item') {
       return this.loot && !this.loot.canCarry()
         ? `Hands full — holding the ${this.loot.carried.label}`
@@ -98,6 +102,12 @@ export class Interactor {
     const p = this.player;
 
     if (it.kind === 'item') { this.loot?.take(it); return; }
+
+    if (it.kind === 'hidingSpot') {
+      if (this.hiding?.hidden) this.hiding.leave();
+      else this.hiding?.enter(it, this.granny);
+      return;
+    }
 
     if (it.kind === 'ladder') { this.startClimb(it); return; }
 

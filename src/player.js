@@ -4,8 +4,8 @@
 // is within STEP_HEIGHT of the player's feet is stepped onto instead of
 // blocking, which is what makes stairs, thresholds and kerbs work without
 // any special-case code.
-import * as THREE from '../vendor/three.module.js?v=1';
-import { STEP_HEIGHT, moveBody, clearAt } from './collide.js?v=1';
+import * as THREE from '../vendor/three.module.js?v=9';
+import { STEP_HEIGHT, moveBody, clearAt } from './collide.js?v=9';
 
 const RADIUS = 0.28;
 export const EYE_STAND = 1.62;

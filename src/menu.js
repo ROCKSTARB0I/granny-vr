@@ -7,9 +7,9 @@
 //
 // The GRANNY wordmark is drawn to a canvas and then eroded with noise, the
 // same way the rest of the game's art is made -- no font files, no images.
-import * as THREE from '../vendor/three.module.js?v=1';
-import { mat } from './textures.js?v=1';
-import { buildModel } from './granny.js?v=1';
+import * as THREE from '../vendor/three.module.js?v=9';
+import { mat } from './textures.js?v=9';
+import { buildModel } from './granny.js?v=9';
 
 /* ------------------------------------------------------------- the wordmark */
 
@@ -188,7 +188,7 @@ export class MainMenu {
 
     const hint = document.createElement('p');
     hint.id = 'menuHint';
-    hint.textContent = 'WASD move · mouse look · E take / open · V drop · T throw · Shift run · C crouch';
+    hint.textContent = 'WASD move · mouse look · E take / open · V drop · T throw · G flashlight · Shift run · C crouch';
     root.appendChild(hint);
 
     this.root = root;

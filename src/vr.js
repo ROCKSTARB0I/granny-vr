@@ -10,7 +10,7 @@
 //   * snap turn by default (smooth turning is the main nausea trigger)
 //   * a tunnel vignette while moving
 //   * the jumpscare never rotates your head; she comes to you instead
-import * as THREE from '../vendor/three.module.js?v=1';
+import * as THREE from '../vendor/three.module.js?v=9';
 
 const SNAP_ANGLE = Math.PI / 6;       // 30 degrees
 const DEADZONE = 0.35;
@@ -246,6 +246,7 @@ export class VR {
       const trigger = !!gp.buttons[0]?.pressed;
       const grip = !!gp.buttons[1]?.pressed;
       const aBtn = !!gp.buttons[4]?.pressed;
+      const stickClick = !!gp.buttons[3]?.pressed;
 
       if (hand === 'right') {
         if (trigger && !this._triggerWas[idx]) this.onTrigger?.();
@@ -253,6 +254,9 @@ export class VR {
         if (aBtn && !this._aWas[idx]) this.onThrow?.();
       } else {
         if (trigger && !this._triggerWas[idx]) this.onLeftTrigger?.();
+        // Clicking the left stick toggles the chest lamp.
+        if (stickClick && !this._stickWas) this.onLeftStickClick?.();
+        this._stickWas = stickClick;
       }
       this._triggerWas[idx] = trigger;
       this._gripWas[idx] = grip;

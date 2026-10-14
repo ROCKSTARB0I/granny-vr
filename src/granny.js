@@ -5,9 +5,9 @@
 // beat to resolve into recognition -- standing still in a dark corner two
 // metres away usually works. Hearing is the opposite: any noise anywhere in the
 // house registers, and she walks straight to the exact spot it came from.
-import * as THREE from '../vendor/three.module.js?v=1';
-import { LEVELS, ROOM_BY_ID, WAYPOINTS, GRANNY_SPAWN } from './floorplan.js?v=1';
-import { moveBody } from './collide.js?v=1';
+import * as THREE from '../vendor/three.module.js?v=9';
+import { LEVELS, ROOM_BY_ID, WAYPOINTS, GRANNY_SPAWN } from './floorplan.js?v=9';
+import { moveBody } from './collide.js?v=9';
 
 // The floors she actually lives on. The sewers, the Secret Area and the
 // Special Room are places she visits, not places she should be parked -- left
@@ -367,6 +367,9 @@ export class Granny {
   _canSee(dt) {
     const p = this.player;
     this.hasVisual = false;
+    // Inside a wardrobe or under a bed you are simply not visible. Being found
+    // there is handled by hiding.js, which is a different thing entirely.
+    if (p.hidden) { this.seenFor = 0; return false; }
     const dx = p.pos.x - this.pos.x, dz = p.pos.z - this.pos.z;
     const dy = p.pos.y - this.pos.y;
     const dist = Math.hypot(dx, dz);

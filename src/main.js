@@ -1,18 +1,20 @@
 // main.js -- bootstrap and the frame loop.
-import * as THREE from '../vendor/three.module.js?v=1';
-import { World } from './world.js?v=1';
-import { Player } from './player.js?v=1';
-import { LightRig } from './lighting.js?v=1';
-import { furnish } from './furnish.js?v=1';
-import { auditDoorways, auditStairs, auditStairHeadroom } from './props.js?v=1';
-import { Granny } from './granny.js?v=1';
-import { Audio } from './audio.js?v=1';
-import { JumpScare } from './jumpscare.js?v=1';
-import { Interactor } from './interact.js?v=1';
-import { MainMenu } from './menu.js?v=1';
-import { Loot } from './loot.js?v=1';
-import { VR } from './vr.js?v=1';
-import { PLAYER_SPAWN, LEVELS, ROOM_BY_ID } from './floorplan.js?v=1';
+import * as THREE from '../vendor/three.module.js?v=9';
+import { World } from './world.js?v=9';
+import { Player } from './player.js?v=9';
+import { LightRig } from './lighting.js?v=9';
+import { furnish } from './furnish.js?v=9';
+import { auditDoorways, auditStairs, auditStairHeadroom } from './props.js?v=9';
+import { Granny } from './granny.js?v=9';
+import { Audio } from './audio.js?v=9';
+import { JumpScare } from './jumpscare.js?v=9';
+import { Interactor } from './interact.js?v=9';
+import { MainMenu } from './menu.js?v=9';
+import { Loot } from './loot.js?v=9';
+import { VR } from './vr.js?v=9';
+import { Flashlight } from './flashlight.js?v=9';
+import { Hiding } from './hiding.js?v=9';
+import { PLAYER_SPAWN, LEVELS, ROOM_BY_ID } from './floorplan.js?v=9';
 
 const canvas = document.getElementById('view');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
@@ -145,6 +147,7 @@ function onKeyDown(e) {
     player.freecam = !player.freecam;
     flash(player.freecam ? 'FREECAM  ·  Space up, Ctrl down, Shift fast' : 'WALKING');
   }
+  if (e.code === 'KeyG' && !scare.active) torch.toggle();
   if ((e.code === 'KeyC' || e.code === 'ControlLeft') && !player.freecam) player.crouch = true;
   if (e.code === 'Tab') debugEl.hidden = !debugEl.hidden;
   if (e.code === 'KeyR') respawn();
@@ -182,6 +185,7 @@ const audio = new Audio();
 function unlockAudio() {
   audio.unlock();
   audio.startAmbient();
+  audio.startTheme();
   removeEventListener('pointerdown', unlockAudio);
   removeEventListener('keydown', unlockAudio);
 }
@@ -321,6 +325,7 @@ vr.onEnter = () => {
   state = 'playing';
   audio.unlock();
   audio.startAmbient();
+  audio.startTheme();
 };
 vr.onExit = () => {
   scene.add(camera);
@@ -333,6 +338,19 @@ vr.onExit = () => {
 vr.onTrigger = () => { interactor.use(interactor.current); refreshHand(); };
 vr.onGrip    = () => { loot.drop(false); refreshHand(); };
 vr.onThrow   = () => { loot.drop(true); refreshHand(); };
+
+// Beds, wardrobes and the car can be climbed into.
+const hiding = new Hiding(world, props, player, camera, audio);
+hiding.onMessage = (m) => flash(m.toUpperCase());
+hiding.onFound = () => caught();
+interactor.hiding = hiding;
+interactor.granny = granny;
+
+// Chest lamp. Always equipped -- it is not the Flashlight pickup.
+const torch = new Flashlight(scene, player, camera, audio);
+torch.vr = vr;
+torch.onChange = (on) => flash(on ? 'FLASHLIGHT ON' : 'FLASHLIGHT OFF');
+vr.onLeftStickClick = () => torch.toggle();
 
 const handEl = document.getElementById('hand');
 function refreshHand() {
@@ -350,6 +368,7 @@ pauseHint.hidden = true;
 menu.onPlay(() => {
   audio.unlock();
   audio.startAmbient();
+  audio.startTheme();
   menu.hide();
   hud.hidden = false;
   state = 'playing';
@@ -414,13 +433,15 @@ function frame(now) {
   }
   // A ladder climb drives the player itself, so ordinary movement is skipped.
   const climbing = interactor.update(dt);
-  if (!climbing) {
+  if (!climbing && !hiding.hidden) {
     player.update(dt);
     playerNoise(dt);
   }
   granny.update(dt);
   grannyAudio(dt);
   loot.update(dt);
+  hiding.update(dt, granny);
+  torch.update(dt);
   vr.update(dt);
   if (vr.active) vr.syncRig();
   world.updateDoors(dt);
@@ -470,4 +491,4 @@ renderer.setAnimationLoop(frame);
 for (const d of world.doors) if (d.kind === 'door') d.target = 1;
 
 window.__game = { scene, camera, world, props, player, granny, rig, renderer, THREE, menu,
-                  blockedDoors, blockedStairs, lowStairs, audio, loot, vr, scare, caught, interactor };
+                  blockedDoors, blockedStairs, lowStairs, audio, loot, vr, torch, hiding, scare, caught, interactor };

@@ -33,7 +33,7 @@ export class Audio {
     this.ctx = null;
     this.ready = false;
     this.volMaster = 0.8;
-    this.volMusic = 0.5;
+    this.volMusic = 0.38;
     this.volSfx = 0.9;
     this._ambient = null;
   }
@@ -321,6 +321,114 @@ export class Audio {
       o.connect(g); g.connect(this.sfxBus);
       o.start(t + delay); o.stop(t + delay + 0.25);
     }
+  }
+
+  /* ----------------------------------------------------------- the theme */
+
+  // The slow music-box theme that plays over the house.
+  //
+  // Written in the idiom rather than copied: a music box is a struck comb, so
+  // each note is a bright inharmonic ping with no sustain, and the dread comes
+  // from the tempo and the intervals -- a minor key, a flattened second, long
+  // rests, and a drone a tritone away from where the melody keeps resolving.
+  //
+  // Scheduled against the audio clock with a lookahead, because setTimeout
+  // drifts badly enough to hear.
+  _boxNote(freq, when, gainScale = 1, length = 3.2) {
+    const ctx = this.ctx;
+    const out = ctx.createGain();
+    out.gain.value = 0.0001;
+    out.connect(this.musicBus);
+
+    // Struck-comb partials: inharmonic, which is what stops it sounding like
+    // a flute. The ratios are a tine's, not a string's.
+    const partials = [[1, 1], [2.76, 0.42], [5.40, 0.18], [8.93, 0.07]];
+    for (const [ratio, amp] of partials) {
+      const o = ctx.createOscillator();
+      o.type = 'sine';
+      o.frequency.value = freq * ratio;
+      const g = ctx.createGain();
+      const peak = 0.135 * amp * gainScale;
+      const decay = length * (ratio > 4 ? 0.35 : ratio > 2 ? 0.6 : 1);
+      g.gain.setValueAtTime(0.0001, when);
+      g.gain.exponentialRampToValueAtTime(peak, when + 0.004);   // struck
+      g.gain.exponentialRampToValueAtTime(0.0001, when + decay);
+      o.connect(g); g.connect(out);
+      o.start(when); o.stop(when + decay + 0.05);
+    }
+
+    // The mechanism: a faint click of the tine being plucked.
+    const n = this._noiseSource();
+    const nf = ctx.createBiquadFilter();
+    nf.type = 'highpass'; nf.frequency.value = 3800;
+    const ng = ctx.createGain();
+    ng.gain.setValueAtTime(0.022 * gainScale, when);
+    ng.gain.exponentialRampToValueAtTime(0.0001, when + 0.05);
+    n.connect(nf); nf.connect(ng); ng.connect(out);
+    n.start(when); n.stop(when + 0.08);
+
+    out.gain.setValueAtTime(1, when);
+  }
+
+  startTheme() {
+    if (!this.ready || this._theme) return;
+    const ctx = this.ctx;
+
+    // D minor with a flattened second. The Eb against the D drone is the sour
+    // interval the whole thing hangs on.
+    const N = {
+      D4: 293.66, Eb4: 311.13, F4: 349.23, G4: 392.00, A4: 440.00,
+      Bb4: 466.16, C5: 523.25, D5: 587.33, Eb5: 622.25, F5: 698.46, A5: 880.00,
+    };
+    // [note, beat offset, velocity]. 16 beats to the phrase, with real rests.
+    const phrases = [
+      [[N.D5, 0, 1], [N.A4, 1.5, .8], [N.F4, 3, .7], [N.Eb5, 5, .9],
+       [N.D5, 6.5, .75], [N.A4, 8, .6], [N.Bb4, 10, .85], [N.A4, 11.5, .6],
+       [N.F4, 13, .55]],
+      [[N.F5, 0, .95], [N.Eb5, 1.5, .8], [N.D5, 3, .85], [N.C5, 4.5, .7],
+       [N.Bb4, 6, .8], [N.A4, 8, .7], [N.G4, 10.5, .6], [N.F4, 12, .55],
+       [N.D4, 14, .5]],
+      [[N.A5, 0, .7], [N.F5, 2, .6], [N.D5, 4, .8], [N.Eb5, 7, .9],
+       [N.D5, 9, .6], [N.A4, 12, .5]],
+    ];
+
+    const BPM = 54;
+    const beat = 60 / BPM;
+    this._theme = { phrase: 0, nextTime: ctx.currentTime + 0.4, stopped: false };
+
+    const schedule = () => {
+      if (!this._theme || this._theme.stopped) return;
+      const t = this._theme;
+      // Keep roughly two seconds of music queued ahead of the clock.
+      while (t.nextTime < ctx.currentTime + 2.0) {
+        const ph = phrases[t.phrase % phrases.length];
+        for (const [f, off, vel] of ph) {
+          this._boxNote(f, t.nextTime + off * beat, vel, 3.4);
+        }
+        // A low note under each phrase, to sit it on the floor.
+        const root = ctx.createOscillator();
+        const rg = ctx.createGain();
+        root.type = 'sine';
+        root.frequency.value = t.phrase % 2 ? 73.42 : 69.30;   // D2 / Db2
+        rg.gain.setValueAtTime(0.0001, t.nextTime);
+        rg.gain.exponentialRampToValueAtTime(0.05, t.nextTime + 0.6);
+        rg.gain.exponentialRampToValueAtTime(0.0001, t.nextTime + 14 * beat);
+        root.connect(rg); rg.connect(this.musicBus);
+        root.start(t.nextTime); root.stop(t.nextTime + 14 * beat + 0.2);
+
+        t.nextTime += 16 * beat;
+        t.phrase++;
+      }
+      t.timer = setTimeout(schedule, 500);
+    };
+    schedule();
+  }
+
+  stopTheme() {
+    if (!this._theme) return;
+    this._theme.stopped = true;
+    clearTimeout(this._theme.timer);
+    this._theme = null;
   }
 
   /* -------------------------------------------------------------- ambience */
